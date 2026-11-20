@@ -1,0 +1,28 @@
+# approve-2fa v2 (fresh Supabase project). Used through the junction described in README.md step 2.
+project_id = "approve-2fa"
+
+# Both functions authenticate callers themselves (x-verifier-key, or the user's JWT checked with auth.getUser),
+# so the gateway JWT check is off. Equivalent to `supabase functions deploy <name> --no-verify-jwt`.
+[functions.approval-request]
+verify_jwt = false
+
+[functions.approval-verify]
+verify_jwt = false
+
+# Auth for the approver PWA (pushed with `supabase config push`). Sign-ups get turned off after the one approver exists.
+[auth]
+site_url = "https://sanscripter.github.io/morgan-toolbox/approval-v2/"
+additional_redirect_urls = ["https://sanscripter.github.io/morgan-toolbox/approval-v2/?setup=1"]
+jwt_expiry = 600
+enable_signup = true
+
+[auth.email]
+enable_signup = true
+enable_confirmations = true
+
+[auth.mfa]
+max_enrolled_factors = 10
+
+[auth.mfa.totp]
+enroll_enabled = true
+verify_enabled = true

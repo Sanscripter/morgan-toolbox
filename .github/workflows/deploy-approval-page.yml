@@ -12,6 +12,7 @@ on:
       - setup/security/approval-sw.js
       - setup/security/manifest.webmanifest
       - setup/security/approval-icon.svg
+      - setup/security/approval-page-v2.html
 
 permissions:
   contents: read
@@ -45,6 +46,14 @@ jobs:
           Copy-Item 'setup/security/approval-sw.js' 'public/approval-sw.js' -Force
           Copy-Item 'setup/security/manifest.webmanifest' 'public/manifest.webmanifest' -Force
           Copy-Item 'setup/security/approval-icon.svg' 'public/approval-icon.svg' -Force
+          # approve-2fa v2 page (supabase-v2/README.md step 9); config.js comes from public repo variables
+          New-Item -ItemType Directory -Force -Path public/approval-v2 | Out-Null
+          Copy-Item 'setup/security/approval-page-v2.html' 'public/approval-v2/index.html' -Force
+          Copy-Item 'setup/security/approval-sw.js' 'public/approval-v2/approval-sw.js' -Force
+          Copy-Item 'setup/security/manifest.webmanifest' 'public/approval-v2/manifest.webmanifest' -Force
+          Copy-Item 'setup/security/approval-icon.svg' 'public/approval-v2/approval-icon.svg' -Force
+          $cfg = [ordered]@{ supabaseUrl = '${{ vars.APPROVAL_V2_SUPABASE_URL }}'; anonKey = '${{ vars.APPROVAL_V2_ANON_KEY }}'; vapidPublicKey = '${{ vars.APPROVAL_V2_VAPID_PUBLIC_KEY }}' }
+          "window.APPROVE_2FA_CONFIG = $($cfg | ConvertTo-Json -Compress)" | Set-Content -Encoding utf8 public/approval-v2/config.js
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3

@@ -25,3 +25,7 @@ supabase/
 
 # PowerShell and shell history
 *.ps1xml
+
+# approve-2fa v2 CLI link (junction + temp)
+.sb2/
+supabase-v2/.temp/
